@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Paddle Court</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-container">
+    <div class="card">
+        <h1>🎾 Paddle Court</h1>
+        <h2 style="text-align: center; margin-bottom: 1.5rem; color: #6b7280; font-weight: 500;">Sign in to your account</h2>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group checkbox-row">
+                <input type="checkbox" id="remember-me" name="remember-me">
+                <label for="remember-me">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+
+        <p class="switch-link">
+            Don't have an account? <a th:href="@{/register}">Sign up</a>
+        </p>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 8px; font-size: 0.85rem; color: #6b7280;">
+            <strong>Demo accounts:</strong><br>
+            Admin: <code>admin</code> / <code>admin123</code><br>
+            User: <code>user</code> / <code>user123</code>
+        </div>
+    </div>
+</div>
+</body>
+</html>

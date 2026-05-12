@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Bookings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title">
+        <h1>All Bookings</h1>
+        <p>Complete booking history</p>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}"   class="alert alert-danger"  th:text="${error}"></div>
+
+    <div class="card">
+        <div class="empty-state" th:if="${#lists.isEmpty(bookings)}">
+            <div class="icon">📅</div>
+            <p>No bookings yet</p>
+        </div>
+
+        <table th:if="${not #lists.isEmpty(bookings)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Court</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${bookings}">
+                <td>#<span th:text="${b.id}"></span></td>
+                <td>
+                    <strong th:text="${b.user.username}"></strong><br>
+                    <small style="color:#6b7280;" th:text="${b.user.email}"></small>
+                </td>
+                <td th:text="${b.court.name}"></td>
+                <td th:text="${b.bookingDate}"></td>
+                <td>
+                    <span th:text="${b.startTime}"></span> - <span th:text="${b.endTime}"></span>
+                </td>
+                <td>$<span th:text="${b.totalPrice}"></span></td>
+                <td>
+                    <span th:if="${b.status.name() == 'CONFIRMED'}" class="badge badge-success">CONFIRMED</span>
+                    <span th:if="${b.status.name() == 'CANCELLED'}" class="badge badge-danger">CANCELLED</span>
+                    <span th:if="${b.status.name() == 'PENDING'}"   class="badge badge-warning">PENDING</span>
+                    <span th:if="${b.status.name() == 'COMPLETED'}" class="badge badge-info">COMPLETED</span>
+                </td>
+                <td th:text="${#temporals.format(b.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <form th:if="${b.status.name() == 'CONFIRMED'}"
+                          th:action="@{|/admin/bookings/${b.id}/cancel|}"
+                          method="post" style="display:inline;"
+                          onsubmit="return confirm('Cancel this booking?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

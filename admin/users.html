@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title">
+        <h1>Manage Users</h1>
+        <p>View all registered users and toggle their access</p>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${users}">
+                <td>#<span th:text="${u.id}"></span></td>
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.fullName}"></td>
+                <td th:text="${u.phone ?: '-'}"></td>
+                <td>
+                    <span th:if="${u.role.name() == 'ADMIN'}" class="badge badge-warning" th:text="${u.role}"></span>
+                    <span th:if="${u.role.name() == 'USER'}"  class="badge badge-info" th:text="${u.role}"></span>
+                </td>
+                <td>
+                    <span th:if="${u.enabled}" class="badge badge-success">Active</span>
+                    <span th:unless="${u.enabled}" class="badge badge-danger">Disabled</span>
+                </td>
+                <td th:text="${#temporals.format(u.createdAt, 'yyyy-MM-dd')}"></td>
+                <td>
+                    <form th:if="${u.role.name() == 'USER'}"
+                          th:action="@{|/admin/users/${u.id}/toggle|}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-secondary btn-sm"
+                                th:text="${u.enabled} ? 'Disable' : 'Enable'">Toggle</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

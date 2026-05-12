@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Courts</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h1>Manage Courts</h1>
+            <p>Create, edit, and remove courts</p>
+        </div>
+        <a th:href="@{/admin/courts/new}" class="btn btn-primary">+ Add Court</a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}"   class="alert alert-danger"  th:text="${error}"></div>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Price/hr</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="court : ${courts}">
+                <td>#<span th:text="${court.id}"></span></td>
+                <td th:text="${court.name}"></td>
+                <td><span class="badge badge-info" th:text="${court.type}"></span></td>
+                <td th:text="${court.location}"></td>
+                <td>$<span th:text="${court.pricePerHour}"></span></td>
+                <td>
+                    <span th:if="${court.available}" class="badge badge-success">Yes</span>
+                    <span th:unless="${court.available}" class="badge badge-danger">No</span>
+                </td>
+                <td>
+                    <a th:href="@{|/admin/courts/${court.id}/edit|}" class="btn btn-secondary btn-sm">Edit</a>
+                    <form th:action="@{|/admin/courts/${court.id}/delete|}" method="post"
+                          style="display:inline;" onsubmit="return confirm('Delete this court?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

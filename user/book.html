@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Court - Paddle Court</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container" style="max-width: 700px;">
+    <div class="page-title">
+        <h1>Book a Court</h1>
+    </div>
+
+    <div class="card">
+        <div style="background: #f9fafb; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <h3 th:text="${court.name}"></h3>
+            <p style="color: #6b7280;" th:text="${court.location}"></p>
+            <p style="margin-top: 0.5rem;">
+                <span class="badge badge-info" th:text="${court.type}"></span>
+                <strong style="margin-left: 1rem;">$<span th:text="${court.pricePerHour}"></span>/hour</strong>
+            </p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/user/book}" th:object="${bookingDto}" method="post">
+            <input type="hidden" th:field="*{courtId}">
+
+            <div class="form-group">
+                <label for="bookingDate">Booking Date *</label>
+                <input type="date" id="bookingDate" th:field="*{bookingDate}"
+                       class="form-control" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                <div class="form-error" th:if="${#fields.hasErrors('bookingDate')}" th:errors="*{bookingDate}"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startTime">Start Time *</label>
+                    <input type="time" id="startTime" th:field="*{startTime}" class="form-control" required>
+                    <div class="form-error" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="endTime">End Time *</label>
+                    <input type="time" id="endTime" th:field="*{endTime}" class="form-control" required>
+                    <div class="form-error" th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes (optional)</label>
+                <textarea id="notes" th:field="*{notes}" class="form-control" rows="3"
+                          placeholder="Any special requests..."></textarea>
+                <div class="form-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                <a th:href="@{/user/courts}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

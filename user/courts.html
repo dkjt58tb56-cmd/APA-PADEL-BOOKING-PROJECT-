@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Courts - Paddle Court</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title">
+        <h1>Available Courts</h1>
+        <p>Choose a court and book your slot</p>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="court-card" th:each="court : ${courts}">
+            <div class="court-image">🎾</div>
+            <div class="court-body">
+                <h3 th:text="${court.name}"></h3>
+                <div class="court-info" th:text="${court.location}"></div>
+                <span class="badge badge-info" th:text="${court.type}"></span>
+                <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.9rem;"
+                   th:text="${court.description}"></p>
+                <div class="court-price">$<span th:text="${court.pricePerHour}"></span>/hour</div>
+                <a th:href="@{|/user/book/${court.id}|}" class="btn btn-primary">Book This Court</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" th:if="${#lists.isEmpty(courts)}">
+        <div class="icon">🏟️</div>
+        <p>No courts available right now. Please check back later.</p>
+    </div>
+</div>
+</body>
+</html>

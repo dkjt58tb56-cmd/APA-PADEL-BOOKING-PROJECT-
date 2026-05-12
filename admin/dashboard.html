@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title">
+        <h1>Admin Dashboard 🛠️</h1>
+        <p>Welcome back, <span th:text="${user.fullName}"></span></p>
+    </div>
+
+    <div class="grid grid-4">
+        <div class="stat-card">
+            <div class="stat-value" th:text="${totalUsers}">0</div>
+            <div class="stat-label">Regular Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${totalCourts}">0</div>
+            <div class="stat-label">Courts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${totalBookings}">0</div>
+            <div class="stat-label">Total Bookings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color: #10b981;" th:text="${confirmedBookings}">0</div>
+            <div class="stat-label">Confirmed</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 1.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h2>Recent Bookings</h2>
+            <a th:href="@{/admin/bookings}" class="btn btn-primary btn-sm">View All</a>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(recentBookings)}">
+            <div class="icon">📅</div>
+            <p>No bookings yet</p>
+        </div>
+
+        <table th:if="${not #lists.isEmpty(recentBookings)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Court</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${recentBookings}">
+                <td>#<span th:text="${b.id}"></span></td>
+                <td th:text="${b.user.username}"></td>
+                <td th:text="${b.court.name}"></td>
+                <td th:text="${b.bookingDate}"></td>
+                <td>
+                    <span th:text="${b.startTime}"></span> - <span th:text="${b.endTime}"></span>
+                </td>
+                <td>
+                    <span th:if="${b.status.name() == 'CONFIRMED'}" class="badge badge-success">CONFIRMED</span>
+                    <span th:if="${b.status.name() == 'CANCELLED'}" class="badge badge-danger">CANCELLED</span>
+                    <span th:if="${b.status.name() == 'PENDING'}"   class="badge badge-warning">PENDING</span>
+                    <span th:if="${b.status.name() == 'COMPLETED'}" class="badge badge-info">COMPLETED</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="grid grid-2" style="margin-top: 1.5rem;">
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
+                <a th:href="@{/admin/courts/new}" class="btn btn-primary">+ Add New Court</a>
+                <a th:href="@{/admin/users}" class="btn btn-secondary">Manage Users</a>
+                <a th:href="@{/admin/activity}" class="btn btn-secondary">View Activity Log</a>
+            </div>
+        </div>
+        <div class="card">
+            <h2>System Stats</h2>
+            <table style="margin-top:1rem;">
+                <tr><th>Confirmed Bookings</th><td th:text="${confirmedBookings}"></td></tr>
+                <tr><th>Cancelled Bookings</th><td th:text="${cancelledBookings}"></td></tr>
+                <tr><th>Total Admins</th><td th:text="${totalAdmins}"></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

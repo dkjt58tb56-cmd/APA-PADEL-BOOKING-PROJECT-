@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Log</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="page-title">
+        <h1>System Activity Log</h1>
+        <p>Recent operations and transactions across all users</p>
+    </div>
+
+    <div class="card">
+        <div class="empty-state" th:if="${#lists.isEmpty(logs)}">
+            <div class="icon">📋</div>
+            <p>No activity yet</p>
+        </div>
+
+        <table th:if="${not #lists.isEmpty(logs)}">
+            <thead>
+            <tr>
+                <th>When</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${#temporals.format(log.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="${log.user != null ? log.user.username : 'system'}"></td>
+                <td><span class="badge badge-info" th:text="${log.action}"></span></td>
+                <td th:text="${log.description}"></td>
+                <td th:text="${log.ipAddress}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
